@@ -7,8 +7,8 @@ text = st.text_area("요약할 내용을 입력하세요")
 
 if st.button("요약하기"):
     headers = {
-        "X-NCP-APIGW-API-KEY-ID": "YOUR_CLIENT_ID",
-        "X-NCP-APIGW-API-KEY": "YOUR_CLIENT_SECRET",
+        "X-NCP-APIGW-API-KEY-ID": "cjYv5sTlP4_kIjVjzZxK",
+        "X-NCP-APIGW-API-KEY": "t37i8VNUQJ",
         "Content-Type": "application/json"
     }
     data = {
