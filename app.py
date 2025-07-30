@@ -7,14 +7,14 @@ import uuid
 
 class CompletionExecutor:
     def __init__(self, host, api_key, request_id):
-        self._host = "clovastudio.stream.ntruss.com"
-        self._api_key = "nv-0fcd9ac140a84743bc048135c96363c3lEvD"  # 여긴 순수 API 키만 (Bearer 제거)
-        self._request_id = str(uuid.uuid4())
+        self._host = host
+        self._api_key = api_key  # Bearer 없이
+        self._request_id = request_id
 
     def _send_request(self, completion_request):
         headers = {
             'Content-Type': 'application/json; charset=utf-8',
-            'Authorization': f'Bearer {self._api_key}',  # 여기서만 Bearer 붙이기
+            'Authorization': f'Bearer {self._api_key}',  # 여기서만 Bearer 추가
             'X-NCP-CLOVASTUDIO-REQUEST-ID': self._request_id
         }
 
@@ -26,11 +26,7 @@ class CompletionExecutor:
         return result
 
     def execute(self, completion_request):
-        res = self._send_request(completion_request)
-        if res['status']['code'] == '20000':
-            return res['result']
-        else:
-            return res  # 전체 에러 반환
+        return self._send_request(completion_request)
 
 
 # ✅ Streamlit 앱
@@ -46,7 +42,7 @@ if st.button("요약하기"):
         with st.spinner("요약 중입니다..."):
             executor = CompletionExecutor(
                 host="clovastudio.stream.ntruss.com",
-                api_key="nv-여기에_발급받은_API_KEY만_입력하세요",  # Bearer 없이!
+                api_key="nv-0fcd9ac140a84743bc048135c96363c3lEvD",  # Bearer 제거
                 request_id=str(uuid.uuid4())
             )
 
@@ -61,14 +57,10 @@ if st.button("요약하기"):
 
             result = executor.execute(request_data)
 
-            if (
-                isinstance(result, dict)
-                and "result" in result
-                and "summaries" in result["result"]
-                and len(result["result"]["summaries"]) > 0
-            ):
+            try:
+                summary_text = result["result"]["summaries"][0]["summary"]
                 st.success("✅ 요약 결과:")
-                st.write(result["result"]["summaries"][0]["summary"])
-            else:
+                st.write(summary_text)
+            except Exception as e:
                 st.error("❌ 요약 실패:")
                 st.json(result)
