@@ -61,9 +61,14 @@ if st.button("요약하기"):
 
             result = executor.execute(request_data)
 
-            if isinstance(result, dict) and "summary" in result:
-                st.success("✅ 요약 결과:")
-                st.write(result["summary"])
-            else:
-                st.error("❌ 요약 실패:")
-                st.json(result)
+                if (
+                    isinstance(result, dict)
+                    and "result" in result
+                    and "summaries" in result["result"]
+                    and len(result["result"]["summaries"]) > 0
+                ):
+                    st.success("✅ 요약 결과:")
+                    st.write(result["result"]["summaries"][0]["summary"])
+                else:
+                    st.error("❌ 요약 실패:")
+                    st.json(result)
