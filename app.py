@@ -57,7 +57,7 @@ if st.button("요약하기"):
         with st.spinner("요약 중입니다..."):
 
             # ✅ 여기에 본인의 실제 서비스용 API 키를 넣으세요 (Bearer 제거!)
-            API_KEY = "nv-발급받은_API_KEY_여기에_입력"  
+            API_KEY = "nv-0fcd9ac140a84743bc048135c96363c3lEvD"  
             HOST = "clovastudio.stream.ntruss.com"
 
             executor = CompletionExecutor(
