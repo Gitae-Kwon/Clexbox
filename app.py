@@ -1,12 +1,14 @@
-import streamlit as st
-import uuid
+# -*- coding: utf-8 -*-
 import http.client
 import json
+import streamlit as st
+import uuid
+
 
 class CompletionExecutor:
     def __init__(self, host, api_key, request_id):
         self._host = host
-        self._api_key = api_key
+        self._api_key = api_key  # 순수 키만 (Bearer 없음)
         self._request_id = request_id
 
     def _send_request(self, completion_request):
@@ -24,13 +26,10 @@ class CompletionExecutor:
         return result
 
     def execute(self, completion_request):
-        res = self._send_request(completion_request)
-        if res['status']['code'] == '20000':
-            return res['result']
-        else:
-            return res
+        return self._send_request(completion_request)
 
-# Streamlit 앱
+
+# ✅ Streamlit 앱
 st.set_page_config(page_title="네이버 Clova 요약기", layout="centered")
 st.title("✂️ 네이버 Clova 요약기 (Studio API v2)")
 
@@ -41,26 +40,29 @@ if st.button("요약하기"):
         st.warning("요약할 내용을 입력해주세요.")
     else:
         with st.spinner("요약 중입니다..."):
-            executor = CompletionExecutor(
-                host="clovastudio.stream.ntruss.com",
-                api_key=st.secrets["clova"]["api_key"],
-                request_id=str(uuid.uuid4())
-            )
+            try:
+                executor = CompletionExecutor(
+                    host="clovastudio.stream.ntruss.com",
+                    api_key=st.secrets["CLOVA_API_KEY"],  # secrets.toml 또는 cloud secrets에 저장된 키
+                    request_id=str(uuid.uuid4())
+                )
 
-            request_data = {
-                "texts": [input_text],
-                "segMinSize": 300,
-                "includeAiFilters": False,
-                "autoSentenceSplitter": True,
-                "segCount": -1,
-                "segMaxSize": 1000
-            }
+                request_data = {
+                    "texts": [input_text],
+                    "segMinSize": 300,
+                    "includeAiFilters": False,
+                    "autoSentenceSplitter": True,
+                    "segCount": -1,
+                    "segMaxSize": 1000
+                }
 
-            result = executor.execute(request_data)
+                response = executor.execute(request_data)
 
-            if isinstance(result, dict) and "summary" in result:
-                st.success("✅ 요약 결과:")
-                st.write(result["summary"])
-            else:
-                st.error("❌ 요약 실패:")
-                st.json(result)
+                if response["status"]["code"] == "20000" and "text" in response["result"]:
+                    st.success("✅ 요약 결과:")
+                    st.write(response["result"]["text"])
+                else:
+                    st.error("❌ 요약 실패:")
+                    st.json(response)
+            except Exception as e:
+                st.error(f"오류 발생: {e}")
