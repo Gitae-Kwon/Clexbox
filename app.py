@@ -7,8 +7,8 @@ import uuid
 
 class CompletionExecutor:
     def __init__(self, host, api_key, request_id):
-        self._host = clovastudio.stream.ntruss.com
-        self._api_key = nv-eb29729ac74043cfbc34216d21d848a0QwLw  # 여긴 순수 API 키만 (Bearer 제거)
+        self._host = "clovastudio.stream.ntruss.com"
+        self._api_key = "nv-eb29729ac74043cfbc34216d21d848a0QwLw"  # 여긴 순수 API 키만 (Bearer 제거)
         self._request_id = str(uuid.uuid4())
 
     def _send_request(self, completion_request):
