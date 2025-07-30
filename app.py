@@ -30,8 +30,8 @@ class CompletionExecutor:
 
 
 # ✅ Streamlit 앱
-st.set_page_config(page_title="네이버 Clova 요약기", layout="centered")
-st.title("✂️ 네이버 Clova 요약기 (Studio API v2)")
+st.set_page_config(page_title="Ai 요약기", layout="centered")
+st.title("✂️ Ai 요약기 (Studio API v2)")
 
 input_text = st.text_area("요약할 내용을 입력하세요", height=200)
 
