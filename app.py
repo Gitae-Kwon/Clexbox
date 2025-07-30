@@ -43,7 +43,7 @@ if st.button("요약하기"):
             try:
                 executor = CompletionExecutor(
                     host="clovastudio.stream.ntruss.com",
-                    api_key=st.secrets["CLOVA_API_KEY"],  # secrets.toml 또는 cloud secrets에 저장된 키
+                    api_key=st.secrets["clova"]["api_key"],  # secrets.toml 또는 cloud secrets에 저장된 키
                     request_id=str(uuid.uuid4())
                 )
 
